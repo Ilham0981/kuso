@@ -13,5 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy seluruh konten direktori saat ini ke dalam container
 COPY . .
 
+
 # Jalankan skrip Python
-CMD ["python3", "kuso.py"]
+CMD ["python", "kuso.py"]
