@@ -16,4 +16,4 @@ COPY . .
 
 
 # Jalankan skrip Python
-CMD ["sh", "-c", "sleep 99999999 && python kuso.py"]
+CMD ["python3", "kuso.py"]
