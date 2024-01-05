@@ -3,6 +3,7 @@ FROM python:3
 
 # Set working directory di dalam container
 WORKDIR /app
+EXPOSE 80
 
 # Copy file requirements.txt ke dalam container
 COPY requirements.txt .
