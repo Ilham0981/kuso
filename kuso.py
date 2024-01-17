@@ -1,14 +1,22 @@
+import os
+import psycopg2
+from telebot import types
 import telebot
 import requests
 from bs4 import BeautifulSoup
 from telegraph import Telegraph
-from telebot import types
 
 TOKEN_BOT = '1835554210:AAFerCa7Yko4mH6pDUNCZ8zq_ax7_x_c6Kk'
 bot = telebot.TeleBot(TOKEN_BOT)
 
 TELEGRAPH_TOKEN = 'cf70c520d1d0057bb5b5f86a32f47edeb2b50e978a5453ca748ac50051b4'
 telegraph = Telegraph(TELEGRAPH_TOKEN)
+
+# Informasi koneksi database
+db_host = 'hansken.db.elephantsql.com'
+db_user = 'wkhacnjk'
+db_password = 'kkkPlZB6nN4qo-3bb1z9qKtF5MdXt2oo'
+db_name = 'wkhacnjk'
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
@@ -35,8 +43,6 @@ def anime_info_command(message):
             anime[key] = None if value == '' else value
         sinopsis_element = soup.select_one('.lexot > p')
         anime['sinopsis'] = sinopsis_element.get_text().strip() if sinopsis_element else 'Sinopsis not found'
-        
-       
         
         anime['list_download'] = []
         for el in soup.select('.smokeddlrh'):
@@ -93,6 +99,23 @@ def anime_info_command(message):
 
         content += "<br><i>Bot by @ilham_maulana1</i><br>"
         content += "<i>Jika Bot ini membantu, dukung bot ini dengan cara donasi ke 6282137021145 dana :)</i>"
+
+        # Save user ID to database without duplicates
+        user_id = message.from_user.id
+        connection = psycopg2.connect(host=db_host, user=db_user, password=db_password, dbname=db_name)
+        cursor = connection.cursor()
+
+        # Check if the user ID already exists in the database
+        cursor.execute("SELECT * FROM user_ids WHERE user_id = %s", (user_id,))
+        existing_user = cursor.fetchone()
+
+        # If the user ID is not already in the database, insert it
+        if not existing_user:
+            cursor.execute("INSERT INTO user_ids (user_id) VALUES (%s)", (user_id,))
+            connection.commit()
+
+        cursor.close()
+        connection.close()
 
         response = telegraph.create_page(
             f"Anime: {anime['title']}",
