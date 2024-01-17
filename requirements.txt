@@ -2,5 +2,5 @@ beautifulsoup4
 requests
 telebot
 telegraph
-gunicorn
+psycopg2-binary
 psycopg2
