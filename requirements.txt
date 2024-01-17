@@ -3,4 +3,4 @@ requests
 telebot
 telegraph
 psycopg2-binary
-psycopg2
+
