@@ -1,1 +1,1 @@
-worker: python kuso.py
+worker: python3 kuso.py
