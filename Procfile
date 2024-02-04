@@ -1,1 +1,1 @@
-web: gunicorn main:app
+worker: python kuso.py
